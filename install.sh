@@ -95,7 +95,7 @@ case "$REPLY" in
                 ;;
             [Dd])
                 echo -e "\nConfiguring Sober-Wrapper.sh: Disabling OpenGL by default"
-                  sudo sed -i $'28,34c\\\nsed -i \\\'s|"use_opengl":.*|"use_opengl": false|\\\' "$CONFIG_FILE"' \
+                  sudo sed -i $'29,34c\\\nsed -i \\\'s|"use_opengl":.*|"use_opengl": false|\\\' "$CONFIG_FILE"' \
                 "${DESKTOP_DIR}/Sober-Wrapper.sh"
                 ;;
             *)
