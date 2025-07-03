@@ -1,13 +1,41 @@
 #!/bin/bash
 set -euo pipefail
 
+check_dir() {
+    if [ ! -d "$1" ]; then
+        echo "Error: Directory $1 does not exist" >&2
+        return 1
+    fi
+    return 0
+}
+
+check_file() {
+    if [ ! -f "$1" ]; then
+        echo "Error: File $1 does not exists" >&2
+        return 1
+    fi
+    return 0
+}
+
+create_dir() {
+    if [ ! -d "$1" ]; then
+        echo "Creating directory: $1"
+        mkdir -p "$1" || {
+            echo "failed to create directory: $1" >&2
+            return 1
+        }
+    fi
+        return 0
+    }
+
+
 DESKTOP_DIR="/var/lib/flatpak/app/org.vinegarhq.Sober/current/active/export/share/applications"
 DESKTOP_FILE="${DESKTOP_DIR}/org.vinegarhq.Sober.desktop"
 CONFIG_FILE="$HOME/.var/app/org.vinegarhq.Sober/config/sober/config.json"
 
-read -p "Create separate .desktop for Sober? [y/N] " -n 1 -r
+read -p "Create separate .desktop for Sober? [y/N] " -n 1 -r reply
 echo
-case "$REPLY" in
+case "$reply" in
     [Yy])
         DESKTOP_DIR="${HOME}/.local/share/applications"
         echo -e "\nPath to Separate :\n$DESKTOP_DIR"
@@ -15,11 +43,20 @@ case "$REPLY" in
         echo
         case "$REPLY" in
             [Nn])
-                read -p "Enter Path to Separate: " DESKTOP_DIR
+                while true; do
+                    read -p "Enter Path to Separate: " DESKTOP_DIR
+                    check_dir "$DESKTOP_DIR" && break
+                done
                 ;;
             [Yy]|"")
-                mkdir -p "$DESKTOP_DIR"
-                cat > "${DESKTOP_DIR}/org.vinegarhq.Sober.desktop" <<EOF
+                echo -e "\nContinuing with default paths..."
+                check_dir "$DESKTOP_DIR" || {
+                    echo "Directory is not exists. May You not install Sober, Exiting..."
+                    exit 1
+                }
+                ;;
+        esac
+        cat > "${DESKTOP_DIR}/org.vinegarhq.Sober.desktos" <<EOF
 [Desktop Entry]
 Type=Application
 Name=Sober Wrapper
@@ -32,29 +69,28 @@ Categories=GNOME;GTK;Game;
 Terminal=false
 PrefersNonDefaultGPU=true
 SingleMainWindow=true
-Exec=Exec=${DESKTOP_DIR}/Sober-Wrapper.sh
-X-Flatpak=org.vinegarhq.Sober"
+Exec=${DESKTOP_DIR}/Sober-Wrapper.sh
+X-Flatpak=org.vinegarhq.Sober
 EOF
-                     DESKTOP_FILE="${DESKTOP_DIR}/org.vinegarhq.Sober.desktop"
-                     ;;
-            *)
-                echo -e "\nInvalid choice, exiting..."
-                exit 1
-                ;;
-        esac
-        ;;
+;;
     [Nn]|"")
             echo -e "\nPath to Sober.desktop :\n$DESKTOP_FILE\nInstall dir :\n$DESKTOP_DIR"
             read -p "Correct? [Y/n] " -n 1 -r
             echo
             case "$REPLY" in
                 [Nn])
+                    while true; do
                     read -p $'\nEnter Path to Sober.desktop: ' DESKTOP_FILE
+                    check_dir "$DESKTOP_DIR" && break
+                    done
                     DESKTOP_DIR=$(dirname "$DESKTOP_FILE")
-                    echo -e "Install dir :\n$DESKTOP_DIR"
                     ;;
                 [Yy]|"")
                     echo "\nContinuing with default paths..."
+                    check_file "$DESKTOP_FILE" || {
+                        echo "File is not exists. May You not install Sober, Exiting..."
+                    exit 1
+                    }   
                     ;;
                 *)
                     echo -e "\nInvalid choice, exiting..."
@@ -68,35 +104,36 @@ EOF
          ;;
 esac
 
+check_dir "$DESKTOP_DIR" || exit 1
+
 echo -e "\nDownloading Script..."
-sudo curl -SLo "${DESKTOP_DIR}/Sober-Wrapper.sh" \
-     "https://raw.githubusercontent.com/I-layder-I/quick-sober-opengl/main/Sober-Wrapper.sh"
+if ! sudo curl -SLo "${DESKTOP_DIR}/Sober-Wrapper.sh" \
+     "https://raw.githubusercontent.com/I-layder-I/quick-sober-opengl/main/Sober-Wrapper.sh"; then
+    echo "Failed to download script" >&2
+    exit 1
+fi
 echo "Done"
 
 echo -e "Path to Sober config :\n$CONFIG_FILE"
-read -p "Correct? [Y/n] " -n 1 -r
-echo
-case "$REPLY" in
-    [Yy]|"")
-        echo -e "\nContinuing with default path..."
-        ;;
-    [Nn])
-        read -p "Enter Path to Sober.desktop: " CONFIG_FILE
-        echo -e "\nConfiguring Sober-Wrapper.sh"
-        sudo sed -i "s|^CONFIG_FILE=.*|CONFIG_FILE=${CONFIG_FILE}|" "${DESKTOP_DIR}/Sober-Wrapper.sh"
-        echo "Done"
-        ;;
-    *)
-        echo -e "\nInvalid choice, exiting..."
-        exit 1
-        ;;
-esac
+if ! check_file "$CONFIG_FILE"; then
+    while true; do
+    read -p "Config file not found. Enter custom path: " CONFIG_FILE
+    check_dir "$CONFIG_FILE" && break
+    done
+fi
+
+echo -e "\nConfiguring Sober-Wrapper.sh"
+sudo sed -i "s|^CONFIG_FILE=.*|CONFIG_FILE="${CONFIG_FILE}"|" "${DESKTOP_DIR}/Sober-Wrapper.sh"
+echo "Done"
 
 echo -e "\nAdding chmod +x to Script..."
 sudo chmod +x "${DESKTOP_DIR}/Sober-Wrapper.sh"
 echo "Done"
 
+if [[ $reply =~ ^[Nn]$ ]]; then
 echo -e "\nConfiguring $(basename "$DESKTOP_FILE")"
 sudo sed -i "s|^Name=.*|Name=Sober Wrapper|" "$DESKTOP_FILE"
 sudo sed -i "s|^Exec=.*|Exec=${DESKTOP_DIR}/Sober-Wrapper.sh|" "$DESKTOP_FILE"
+fi
+
 echo -e "\nInstallation Complete!"
