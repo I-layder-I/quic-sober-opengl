@@ -57,7 +57,7 @@ Categories=GNOME;GTK;Game;
 Terminal=false
 PrefersNonDefaultGPU=true
 SingleMainWindow=true
-Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh
+Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh %u
 X-Flatpak=org.vinegarhq.Sober
 EOF
 ;;
@@ -103,10 +103,10 @@ echo -e "\nAdding chmod +x to Script..."
 sudo chmod +x "${DESKTOP_DIR}/Sober-Wrapper.sh"
 echo "Done"
 
-if [[ $reply =~ ^[Nn]$ ]]; then
+if [[ $reply =~ ^[Nn]$|"" ]]; then
     echo -e "\nConfiguring $(basename "$DESKTOP_FILE")"
     sudo sed -i "s|^Name=.*|Name=Sober Wrapper|" "$DESKTOP_FILE"
-    sudo sed -i "s|^Exec=.*|Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh|" "$DESKTOP_FILE"
+    sudo sed -i "s|^Exec=.*|Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh %u|" "$DESKTOP_FILE"
 fi
 
 echo -e "\nInstallation Complete!"
