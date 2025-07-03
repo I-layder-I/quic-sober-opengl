@@ -1,18 +1,17 @@
 #!/bin/bash
 
 CONFIG_FILE="$HOME/.var/app/org.vinegarhq.Sober/config/sober/config.json"
+PLACEID_LIST="$HOME/.config/sober-opengl-placeids.txt"
 
 # Array of Place IDs where OpenGL should be ENABLED
 OPENGL_PLACES=(
     "129279692364812" # Nullscape-ALPHA-0-2
-    # Add more IDs as needed
+    # Array of Place IDs where OpenGL should be ENABLED
 )
 
-URL="$@"
+PLACE_ID=$(echo "$1" | sed 's/%3D/=/g' | grep -oE 'placeId=[0-9]+' | sed 's/.*=//' || true)
 
-PLACE_ID=$(echo "$URL" | grep -oE 'games/[0-9]+' | cut -d'/' -f2)
-
-if [[ -n "$PLACE_ID" ]]; then
+if [[ -n "$PLACE_ID" ]]; then   
     found=0
     for place in "${OPENGL_PLACES[@]}"; do
         if [[ "$place" == "$PLACE_ID" ]]; then
