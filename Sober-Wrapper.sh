@@ -12,7 +12,7 @@ URL="$@"
 
 PLACE_ID=$(echo "$URL" | grep -oE 'games/[0-9]+' | cut -d'/' -f2)
 
-if [[ -n "$PLASE_ID" ]]; then
+if [[ -n "$PLACE_ID" ]]; then
     if [[ -n "${OPENGL_PLACES[$PLACE_ID]}" ]]; then
         sed -i 's|"use_opengl":.*|"use_opengl": true|' "$CONFIG_FILE"
     else
