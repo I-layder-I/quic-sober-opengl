@@ -11,23 +11,11 @@ check_dir() {
 
 check_file() {
     if [ ! -f "$1" ]; then
-        echo "Error: File $1 does not exists" >&2
+        echo "Error: File $1 does not exist" >&2
         return 1
     fi
     return 0
 }
-
-create_dir() {
-    if [ ! -d "$1" ]; then
-        echo "Creating directory: $1"
-        mkdir -p "$1" || {
-            echo "failed to create directory: $1" >&2
-            return 1
-        }
-    fi
-        return 0
-    }
-
 
 DESKTOP_DIR="/var/lib/flatpak/app/org.vinegarhq.Sober/current/active/export/share/applications"
 DESKTOP_FILE="${DESKTOP_DIR}/org.vinegarhq.Sober.desktop"
@@ -51,12 +39,12 @@ case "$reply" in
             [Yy]|"")
                 echo -e "\nContinuing with default paths..."
                 check_dir "$DESKTOP_DIR" || {
-                    echo "Directory is not exists. May You not install Sober, Exiting..."
+                    echo "Directory is not exist. May You not install Sober, Exiting..."
                     exit 1
                 }
                 ;;
         esac
-        cat > "${DESKTOP_DIR}/org.vinegarhq.Sober.desktos" <<EOF
+        cat > "${DESKTOP_DIR}/org.vinegarhq.Sober.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=Sober Wrapper
@@ -69,42 +57,26 @@ Categories=GNOME;GTK;Game;
 Terminal=false
 PrefersNonDefaultGPU=true
 SingleMainWindow=true
-Exec=${DESKTOP_DIR}/Sober-Wrapper.sh
+Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh
 X-Flatpak=org.vinegarhq.Sober
 EOF
 ;;
     [Nn]|"")
             echo -e "\nPath to Sober.desktop :\n$DESKTOP_FILE\nInstall dir :\n$DESKTOP_DIR"
-            read -p "Correct? [Y/n] " -n 1 -r
-            echo
-            case "$REPLY" in
-                [Nn])
-                    while true; do
-                    read -p $'\nEnter Path to Sober.desktop: ' DESKTOP_FILE
-                    check_dir "$DESKTOP_DIR" && break
-                    done
-                    DESKTOP_DIR=$(dirname "$DESKTOP_FILE")
-                    ;;
-                [Yy]|"")
-                    echo "\nContinuing with default paths..."
-                    check_file "$DESKTOP_FILE" || {
-                        echo "File is not exists. May You not install Sober, Exiting..."
-                    exit 1
-                    }   
-                    ;;
-                *)
-                    echo -e "\nInvalid choice, exiting..."
-                    exit 1
-                    ;;
-            esac
+            if ! check_file "$DESKTOP_FILE"; then
+                while true; do
+                    read -p "File not found. Enter custom path to .desktop: " DESKTOP_FILE
+                    check_file "$DESKTOP_FILE" && break
+                done
+            DESKTOP_DIR=$(dirname "$DESKTOP_FILE")
+            fi
+            echo -e "\nFind, Continuing..."
             ;;
     *)
-         echo -e "\nInvalid choice, exiting..."
-         exit 1
-         ;;
+       echo -e "\nInvalid choice, exiting..."
+       exit 1
+       ;;
 esac
-
-check_dir "$DESKTOP_DIR" || exit 1
 
 echo -e "\nDownloading Script..."
 if ! sudo curl -SLo "${DESKTOP_DIR}/Sober-Wrapper.sh" \
@@ -121,9 +93,10 @@ if ! check_file "$CONFIG_FILE"; then
     check_dir "$CONFIG_FILE" && break
     done
 fi
+echo -e "\nFind, Continuing..."
 
 echo -e "\nConfiguring Sober-Wrapper.sh"
-sudo sed -i "s|^CONFIG_FILE=.*|CONFIG_FILE="${CONFIG_FILE}"|" "${DESKTOP_DIR}/Sober-Wrapper.sh"
+sudo sed -i "s|^CONFIG_FILE=.*|CONFIG_FILE=\"${CONFIG_FILE}\"|" "${DESKTOP_DIR}/Sober-Wrapper.sh"
 echo "Done"
 
 echo -e "\nAdding chmod +x to Script..."
@@ -131,9 +104,9 @@ sudo chmod +x "${DESKTOP_DIR}/Sober-Wrapper.sh"
 echo "Done"
 
 if [[ $reply =~ ^[Nn]$ ]]; then
-echo -e "\nConfiguring $(basename "$DESKTOP_FILE")"
-sudo sed -i "s|^Name=.*|Name=Sober Wrapper|" "$DESKTOP_FILE"
-sudo sed -i "s|^Exec=.*|Exec=${DESKTOP_DIR}/Sober-Wrapper.sh|" "$DESKTOP_FILE"
+    echo -e "\nConfiguring $(basename "$DESKTOP_FILE")"
+    sudo sed -i "s|^Name=.*|Name=Sober Wrapper|" "$DESKTOP_FILE"
+    sudo sed -i "s|^Exec=.*|Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh|" "$DESKTOP_FILE"
 fi
 
 echo -e "\nInstallation Complete!"
