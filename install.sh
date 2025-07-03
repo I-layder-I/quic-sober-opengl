@@ -93,11 +93,9 @@ case "$REPLY" in
         case "$REPLY" in
             [Aa]|"")
                 ;;
-            [Nn])
+            [Dd])
                 echo -e "\nConfiguring Sober-Wrapper.sh: Disabling OpenGL by default"
-                sudo sed -i \
-                -e '21,27c\ 
-                sed -i '\' 's|"use_opengl":.*|"use_opengl": false|'\'' "$CONFIG_FILE"' \
+                  sudo sed -i $'22,27c\\\nsed -i \\\'s|"use_opengl":.*|"use_opengl": false|\\\' "$CONFIG_FILE"' \
                 "${DESKTOP_DIR}/Sober-Wrapper.sh"
                 ;;
             *)
@@ -106,8 +104,8 @@ case "$REPLY" in
                 ;;
         esac
         ;;
-    [Dd])
-         sudo sed -i '4,21d' -e '28d' "${DESKTOP_DIR}/Sober-Wrapper.sh"
+    [Nn])
+         sudo sed -i -e '5,21d' -e '28d' "${DESKTOP_DIR}/Sober-Wrapper.sh"
          ;;
     *)
         echo -e "\nInvalid choice, exiting..."
@@ -138,4 +136,9 @@ if [[ $reply =~ ^[Nn]$|"" ]]; then
     sudo sed -i "s|^Exec=.*|Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh %u|" "$DESKTOP_FILE"
 fi
 
-echo -e "\nInstallation Complete!"
+read -p $'\nInstallation Complete!\nStart Sober? [y/N] ' -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    exec "${DESKTOP_DIR}/Sober-Wrapper.sh" >/dev/null 2>&1 &
+    disown -h %%
+fi
