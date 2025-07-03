@@ -84,6 +84,36 @@ if ! sudo curl -SLo "${DESKTOP_DIR}/Sober-Wrapper.sh" \
     echo "Failed to download script" >&2
     exit 1
 fi
+read -p "Use auto OpenGL(more on github) [Y/n] " -n 1 -r
+echo
+case "$REPLY" in
+    [Yy]|"")
+        read -p "Ask when place isn't found in PlaceID, or disable OpenGL by default [Ask/disable] " -n 1 -r
+        echo
+        case "$REPLY" in
+            [Aa]|"")
+                ;;
+            [Nn])
+                echo -e "\nConfiguring Sober-Wrapper.sh: Disabling OpenGL by default"
+                sudo sed -i \
+                -e '21,27c\ 
+                sed -i '\' 's|"use_opengl":.*|"use_opengl": false|'\'' "$CONFIG_FILE"' \
+                "${DESKTOP_DIR}/Sober-Wrapper.sh"
+                ;;
+            *)
+                echo -e "\nInvalid choice, exiting..."
+                exit 1
+                ;;
+        esac
+        ;;
+    [Dd])
+         sudo sed -i '4,21d' -e '28d' "${DESKTOP_DIR}/Sober-Wrapper.sh"
+         ;;
+    *)
+        echo -e "\nInvalid choice, exiting..."
+        exit 1
+        ;;
+esac
 echo "Done"
 
 echo -e "Path to Sober config :\n$CONFIG_FILE"
@@ -92,12 +122,11 @@ if ! check_file "$CONFIG_FILE"; then
     read -p "Config file not found. Enter custom path: " CONFIG_FILE
     check_dir "$CONFIG_FILE" && break
     done
+    echo -e "\nConfiguring Sober-Wrapper.sh"
+    sudo sed -i "s|^CONFIG_FILE=.*|CONFIG_FILE=\"${CONFIG_FILE}\"|" "${DESKTOP_DIR}/Sober-Wrapper.sh"
+    echo "Done"
 fi
 echo -e "\nFind, Continuing..."
-
-echo -e "\nConfiguring Sober-Wrapper.sh"
-sudo sed -i "s|^CONFIG_FILE=.*|CONFIG_FILE=\"${CONFIG_FILE}\"|" "${DESKTOP_DIR}/Sober-Wrapper.sh"
-echo "Done"
 
 echo -e "\nAdding chmod +x to Script..."
 sudo chmod +x "${DESKTOP_DIR}/Sober-Wrapper.sh"

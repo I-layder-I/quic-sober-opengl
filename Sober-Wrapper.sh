@@ -14,16 +14,16 @@ PLACE_ID=$(echo "$URL" | grep -oE 'games/[0-9]+' | cut -d'/' -f2)
 
 if [[ -n "$PLACE_ID" ]]; then
     if [[ " ${OPENGL_PLACES[*]} " =~ " $PLACE_ID " ]]; then
-        sed -i 's/"use_opengl": false/"use_opengl": true/g' "$CONFIG_FILE"
+        sed -i 's|"use_opengl": false|"use_opengl": true|g' "$CONFIG_FILE"
     else
-        sed -i 's/"use_opengl": true/"use_opengl": false/g' "$CONFIG_FILE"
+        sed -i 's|"use_opengl": true|"use_opengl": false|g' "$CONFIG_FILE"
     fi
 else
     zenity --question --title="Sober" --text="Use OpenGL?" --width=300
     if [ $? -eq 0 ]; then
-        sed -i 's/"use_opengl": false/"use_opengl": true/g' "$CONFIG_FILE"
+        sed -i 's|"use_opengl":.*|"use_opengl": true|' "$CONFIG_FILE"
     else
-        sed -i 's/"use_opengl": true/"use_opengl": false/g' "$CONFIG_FILE"
+        sed -i 's|"use_opengl":.*|"use_opengl": false|' "$CONFIG_FILE"
     fi
 fi
 
