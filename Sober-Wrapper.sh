@@ -8,7 +8,7 @@ declare -A OPENGL_PLACES=(
     # Add more IDs as needed
 )
 
-PLACE_ID=$(echo "$1" | grep -oE 'games/[0-9]+' | cut -d'/' -f2)
+PLACE_ID=$(echo "$1" | sed 's/%3D/=/g' | grep -oE 'placeId=[0-9]+' | sed 's/.*=//' || true)
 
 if [[ -n "$PLACE_ID" ]]; then
     if [[ -n "${OPENGL_PLACES[$PLACE_ID]}" ]]; then
