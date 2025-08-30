@@ -2,6 +2,13 @@
 
 I did it because I was too lazy to always get into the configuration of the sober and turn on the open-geel to play Nullscape
 
+
+## Requirements
+
+* Tested on `Arch linux`
+* Installed `org.vinegarhq.Sober` from a flatpack
+* For dialog boxes - `zenity`
+
 ## Installation and Description of functions
 
 1. First, download the installer or execute this command, it downloads the installer and runs it:
