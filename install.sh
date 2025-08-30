@@ -62,7 +62,7 @@ Categories=GNOME;GTK;Game;
 Terminal=false
 PrefersNonDefaultGPU=true
 SingleMainWindow=true
-Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=sober --file-forwarding org.vinegarhq.Sober -- @@u %u @    @
+Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=sober --file-forwarding org.vinegarhq.Sober -- @@u %u @@
 Actions=open-settings;
 X-Flatpak=org.vinegarhq.Sober
 
@@ -191,7 +191,7 @@ echo "Done"
 if [[ $reply =~ ^[Nn]$|"" ]]; then
     echo -e "\nConfiguring $(basename "$DESKTOP_FILE")"
     sudo sed -i "s|^Name=Sober$|Name=Sober Wrapper|" "$DESKTOP_FILE"
-    sudo sed -i "s|^Exec=.*|Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh %u|" "$DESKTOP_FILE"
+    sudo sed -i "s|^Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=sober --file-forwarding org.vinegarhq.Sober -- @@u %u @@|Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh %u|" "$DESKTOP_FILE" 
 fi
 
 read -p $'\nInstallation Complete!\nStart Sober? [y/N] ' -n 1 -r
