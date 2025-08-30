@@ -5,7 +5,7 @@ PLACEID_LIST="$HOME/.config/sober-opengl-placeids.txt"
 
 # Array of Place IDs where OpenGL should be ENABLED
 OPENGL_PLACES=(
-    "129279692364812" # Nullscape-ALPHA-0-2
+    "129279692364812" # Nullscape
     # Array of Place IDs where OpenGL should be ENABLED
 )
 
