@@ -21,6 +21,36 @@ DESKTOP_DIR="/var/lib/flatpak/app/org.vinegarhq.Sober/current/active/export/shar
 DESKTOP_FILE="${DESKTOP_DIR}/org.vinegarhq.Sober.desktop"
 CONFIG_FILE="$HOME/.var/app/org.vinegarhq.Sober/config/sober/config.json"
 
+read -p "Install or Uninstall? [I/u] " -n 1 -r reply
+echo
+case "$reply" in
+    [Uu])
+        read -p "You have separate .desktop in no default path? [y/N] " -n 1 -r reply
+        echo
+        case "$reply" in
+            [Nn]|"")
+                    ;;
+            [Yy])
+                while true; do
+                    read -p "Enter Path to Separate: " DESKTOP_FILE
+                    check_file "$DESKTOP_FILE" && break
+                    DESKTOP_DIR=$(dirname "$DESKTOP_FILE")
+                    check_dir "$DESKTOP_DIR" && break
+                done
+                sudo rm -rf "$DESKTOP_DIR/org.vinegarhq.Sober.desktop"
+                sudo rm -rf "$DESKTOP_DIR/Sober-Wrapper.sh"
+                ;;
+            *)
+              echo -e "\nInvalid choice, exiting..."
+              exit 1
+              ;;
+        sudo rm -rf "$DESKTOP_DIR/org.vinegarhq.Sober.desktop"
+        sudo rm -rf "$DESKTOP_DIR/Sober-Wrapper.sh"
+        sudo rm -rf "$DESKTOP_DIR/.local/share/applications/org.vinegarhq.Sober.desktop"
+        sudo rm -rf "$DESKTOP_DIR/.local/share/applications/Sober-Wrapper.sh"
+        ;;
+        esac
+    [Ii]|"")    
 read -p "Create separate .desktop for Sober? [y/N] " -n 1 -r reply
 echo
 case "$reply" in
@@ -118,7 +148,7 @@ echo -e "Path to Sober config :\n$CONFIG_FILE"
 if ! check_file "$CONFIG_FILE"; then
     while true; do
     read -p "Config file not found. Enter custom path: " CONFIG_FILE
-    check_dir "$CONFIG_FILE" && break
+    check_file "$CONFIG_FILE" && break
     done
     echo -e "\nConfiguring Sober-Wrapper.sh"
     sudo sed -i "s|^CONFIG_FILE=.*|CONFIG_FILE=\"${CONFIG_FILE}\"|" "${DESKTOP_DIR}/Sober-Wrapper.sh"
@@ -142,3 +172,5 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     exec "${DESKTOP_DIR}/Sober-Wrapper.sh" >/dev/null 2>&1 &
     disown -h %%
 fi
+    ;;
+esac
