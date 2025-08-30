@@ -25,21 +25,21 @@ read -p "Install or Uninstall? [I/u] " -n 1 -r reply
 echo
 case "$reply" in
     [Uu])
-        read -p "You have separate .desktop in no default path? [y/N] " -n 1 -r reply
+        read -p "You have separate .desktop in non-default path? [y/N] " -n 1 -r reply
         echo
         case "$reply" in
             [Nn]|"")
                     ;;
             [Yy])
-                while true; do
-                    read -p "Enter Path to Separate: " DESKTOP_FILE
-                    check_file "$DESKTOP_FILE" && break
-                    DESKTOP_DIR=$(dirname "$DESKTOP_FILE")
-                    check_dir "$DESKTOP_DIR" && break
-                done
-                sudo rm -rf "$DESKTOP_DIR/org.vinegarhq.Sober.desktop"
-                sudo rm -rf "$DESKTOP_DIR/Sober-Wrapper.sh"
-                ;;
+                 while true; do
+                     read -p "Enter Path to Separate: " DESKTOP_FILE
+                     check_file "$DESKTOP_FILE" && break
+                     DESKTOP_DIR=$(dirname "$DESKTOP_FILE")
+                     check_dir "$DESKTOP_DIR" && break
+                 done
+                 sudo rm -rf "$DESKTOP_DIR/org.vinegarhq.Sober.desktop"
+                 sudo rm -rf "$DESKTOP_DIR/Sober-Wrapper.sh"
+                 ;;
             *)
               echo -e "\nInvalid choice, exiting..."
               exit 1
