@@ -171,5 +171,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     exec "${DESKTOP_DIR}/Sober-Wrapper.sh" >/dev/null 2>&1 &
     disown -h %%
 fi
-    ;;
+       ;;
+    *)
+      echo -e "\nInvalid choice, exiting..."
+      exit 1
+      ;;
 esac
