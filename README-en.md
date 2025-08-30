@@ -13,7 +13,7 @@ I did it because I was too lazy to always get into the configuration of the sobe
 
 1. First, download the installer or execute this command, it downloads the installer and runs it:
 ```
-sudo curl -SLo /tmp/install.sh "https://raw.githubusercontent.com/I-layder-I/quick-sober-opengl/main/install.sh" & & sudo chmod +x /tmp/install.sh & & /tmp/install.sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/I-layder-I/quick-sober-opengl/main/install.sh)"
 ```
 2. Next is the installation:
    ```
