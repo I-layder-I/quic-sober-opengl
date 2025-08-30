@@ -88,12 +88,12 @@ read -p "Use auto OpenGL(more on github) [Y/n] " -n 1 -r
 echo
 case "$REPLY" in
     [Yy]|"")
-        read -p "Ask when place isn't found in PlaceID, or disable OpenGL by default [Ask/disable] " -n 1 -r
+        read -p "Ask when place isn't found in PlaceID, or disable OpenGL by default [ask/Disable] " -n 1 -r
         echo
         case "$REPLY" in
-            [Aa]|"")
+            [Aa])
                 ;;
-            [Dd])
+            [Dd]|"")
                 echo -e "\nConfiguring Sober-Wrapper.sh: Disabling OpenGL by default"
                   sudo sed -i $'29,34c\\\nsed -i \\\'s|"use_opengl":.*|"use_opengl": false|\\\' "$CONFIG_FILE"' \
                 "${DESKTOP_DIR}/Sober-Wrapper.sh"
