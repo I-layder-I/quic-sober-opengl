@@ -44,12 +44,11 @@ case "$reply" in
               echo -e "\nInvalid choice, exiting..."
               exit 1
               ;;
+        esac
         sudo rm -rf "$DESKTOP_DIR/org.vinegarhq.Sober.desktop"
         sudo rm -rf "$DESKTOP_DIR/Sober-Wrapper.sh"
         sudo rm -rf "$DESKTOP_DIR/.local/share/applications/org.vinegarhq.Sober.desktop"
         sudo rm -rf "$DESKTOP_DIR/.local/share/applications/Sober-Wrapper.sh"
-        ;;
-        esac
     [Ii]|"")    
 read -p "Create separate .desktop for Sober? [y/N] " -n 1 -r reply
 echo
