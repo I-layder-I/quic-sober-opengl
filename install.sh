@@ -112,6 +112,7 @@ Terminal=false
 PrefersNonDefaultGPU=true
 SingleMainWindow=true
 Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh %u
+Actions=open-settings;
 X-Flatpak=org.vinegarhq.Sober
 
 [Desktop Action open-settings]
