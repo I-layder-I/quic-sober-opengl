@@ -12,7 +12,7 @@ sudo curl -SLo /tmp/install.sh "https://raw.githubusercontent.com/I-layder-I/qui
    ```
    Create separate .desktop for Sober? [y/N]
    ```
-   Here the script asks whether to create a separate desktop file (not in the folder with the sober) and throw the Sober-Wrapper itself there (it works with the configuration of the opengl in the sober) so that when updating or deleting, the activator does not merge with the sober. If the answer is positive, it is thrown along the path `"${HOME}/.local/share/applications"` or you can specify your own.
+   Here the script asks whether to create a separate desktop file (not in the folder with the sober) and throw the Sober-Wrapper itself there (it works with the configuration of the opengl in the sober) so that when updating or deleting, the activator does not deleting with the sober. If the answer is positive, it is thrown along the path `"${HOME}/.local/share/applications"` or you can specify your own.
    
 4. Works only when running games from a roblox site, otherwise do not enable this:
    ```
@@ -38,7 +38,7 @@ sudo curl -SLo /tmp/install.sh "https://raw.githubusercontent.com/I-layder-I/qui
    ```
    Ask when place isn't found in PlaceID, or disable OpenGL by default [Ask/disable]
    ```
-   The question here is whether when starting a game not with a place, it will be turned off or ask in a pop-up window whether to turn it on or not.
+   The question here is whether when starting a game not with a PlaceID, it will be turned off or ask in a pop-up window whether to turn it on or not.
    
 7. Whether to start the sober after installation:
    ```
