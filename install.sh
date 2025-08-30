@@ -47,8 +47,32 @@ case "$reply" in
         esac
         sudo rm -rf "$DESKTOP_DIR/org.vinegarhq.Sober.desktop"
         sudo rm -rf "$DESKTOP_DIR/Sober-Wrapper.sh"
-        sudo rm -rf "$HOME/.local/share/applications/org.vinegarhq.Sober.desktop"
-        sudo rm -rf "$HOME/.local/share/applications/Sober-Wrapper.sh"
+        rm -rf "$HOME/.local/share/applications/org.vinegarhq.Sober.desktop"
+        rm -rf "$HOME/.local/share/applications/Sober-Wrapper.sh"
+        cat > "/var/lib/flatpak/app/org.vinegarhq.Sober/current/active/export/share/applications/org.vinegarhq.Sober.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=Sober
+GenericName=Roblox Player
+Comment=Play, chat & explore on Roblox
+Icon=org.vinegarhq.Sober
+Keywords=roblox;vinegar;game;gaming;social;experience;launcher;
+MimeType=x-scheme-handler/roblox;x-scheme-handler/roblox-player;
+Categories=GNOME;GTK;Game;
+Terminal=false
+PrefersNonDefaultGPU=true
+SingleMainWindow=true
+Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=sober --file-forwarding org.vinegarhq.Sober -- @@u %u @    @
+Actions=open-settings;
+X-Flatpak=org.vinegarhq.Sober
+
+[Desktop Action open-settings]
+Name=Settings
+Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=sober org.vinegarhq.Sober config
+EOF
+
+        echo "Uninstall Complete!"
+        exit 0
         ;;
     [Ii]|"")    
 read -p "Create separate .desktop for Sober? [y/N] " -n 1 -r reply
@@ -89,6 +113,10 @@ PrefersNonDefaultGPU=true
 SingleMainWindow=true
 Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh %u
 X-Flatpak=org.vinegarhq.Sober
+
+[Desktop Action open-settings]
+Name=Settings
+Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=sober org.vinegarhq.Sober config
 EOF
 ;;
     [Nn]|"")
