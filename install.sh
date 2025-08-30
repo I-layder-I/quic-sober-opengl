@@ -197,8 +197,7 @@ fi
 read -p $'\nInstallation Complete!\nStart Sober? [y/N] ' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    exec "${DESKTOP_DIR}/Sober-Wrapper.sh" >/dev/null 2>&1 &
-    disown -h %%
+    "${DESKTOP_DIR}/Sober-Wrapper.sh" >/dev/null 2>&1 &
 fi
        ;;
     *)
