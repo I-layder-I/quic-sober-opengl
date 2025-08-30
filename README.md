@@ -12,7 +12,7 @@
 
 1. Для начала скачайте установщик или выполните эту комманду, она скачает установщик и запустит его:
 ```
-sudo curl -SLo /tmp/install.sh "https://raw.githubusercontent.com/I-layder-I/quick-sober-opengl/main/install.sh" && sudo chmod +x /tmp/install.sh && /tmp/install.sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/I-layder-I/quick-sober-opengl/main/install.sh)"
 ```
 2. Далее установка:
    ```
