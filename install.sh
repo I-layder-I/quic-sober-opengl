@@ -49,6 +49,7 @@ case "$reply" in
         sudo rm -rf "$DESKTOP_DIR/Sober-Wrapper.sh"
         sudo rm -rf "$DESKTOP_DIR/.local/share/applications/org.vinegarhq.Sober.desktop"
         sudo rm -rf "$DESKTOP_DIR/.local/share/applications/Sober-Wrapper.sh"
+        ;;
     [Ii]|"")    
 read -p "Create separate .desktop for Sober? [y/N] " -n 1 -r reply
 echo
