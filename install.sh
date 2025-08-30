@@ -190,7 +190,7 @@ echo "Done"
 
 if [[ $reply =~ ^[Nn]$|"" ]]; then
     echo -e "\nConfiguring $(basename "$DESKTOP_FILE")"
-    sudo sed -i "s|^Name=.*|Name=Sober Wrapper|" "$DESKTOP_FILE"
+    sudo sed -i "s|^Name=Sober$|Name=Sober Wrapper|" "$DESKTOP_FILE"
     sudo sed -i "s|^Exec=.*|Exec=${DESKTOP_DIR%/}/Sober-Wrapper.sh %u|" "$DESKTOP_FILE"
 fi
 
