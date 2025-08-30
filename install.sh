@@ -49,7 +49,7 @@ case "$reply" in
         sudo rm -rf "$DESKTOP_DIR/Sober-Wrapper.sh"
         rm -rf "$HOME/.local/share/applications/org.vinegarhq.Sober.desktop"
         rm -rf "$HOME/.local/share/applications/Sober-Wrapper.sh"
-        sudo cat > "/var/lib/flatpak/app/org.vinegarhq.Sober/current/active/export/share/applications/org.vinegarhq.Sober.desktop" <<EOF
+        sudo tee "/var/lib/flatpak/app/org.vinegarhq.Sober/current/active/export/share/applications/org.vinegarhq.Sober.desktop"" > /dev/null <<EOF
 [Desktop Entry]
 Type=Application
 Name=Sober
